@@ -1,4 +1,3 @@
-"""Blogly application."""
 
 from flask import Flask, request, redirect, render_template
 from models import db, connect_db, User
@@ -22,7 +21,7 @@ def home():
 def user_post():
     first_name = request.form["first_name"]
     last_name = request.form["last_name"]
-    image_url= request.form["photo"]
+    image_url= request.form["image_url"]
 
     new_user = User(first_name=first_name,last_name=last_name,image_url=image_url)
     db.session.add(new_user)
