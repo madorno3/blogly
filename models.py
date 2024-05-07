@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-
+from datetime import datetime
 db = SQLAlchemy()
 
 def connect_db(app):
@@ -26,6 +26,20 @@ class User(db.Model):
     
     DEFAULT_IMAGE_URL = "https://www.freeiconspng.com/uploads/icon-user-blue-symbol-people-person-generic--public-domain--21.png"
     image_url = db.Column(db.Text, nullable=False, default=DEFAULT_IMAGE_URL)
+
+class Post(db.Model):
+    __tablename__ = 'posts'
+
+    post_id = db.Column(db.Integer,
+                   primary_key=True,
+                   autoincrement=True)
+    title = db.Column(db.Text, nullable=False)
+    
+    content = db.Column(db.Text, nullable=False)
+    
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    
+
     
 
 
