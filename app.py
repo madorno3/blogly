@@ -1,5 +1,8 @@
+from datetime import datetime
 from flask import Flask, request, redirect, render_template
-from models import db, connect_db, User
+from models import db, connect_db, User, Post
+from flask import url_for
+
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///blogly_users'
@@ -49,5 +52,28 @@ def users_destroy(id):
     db.session.commit()
 
     return redirect("/")
+
+@app.route("/users/<int:id>/posts/new")
+def add_post_form(id):
+    # Assuming you have a way to fetch the user object by ID
+    user = User.query.get(id)
+    return render_template("add_post.html", user=user)
+
+@app.route("/users/<int:id>/posts/new", methods=["POST"])
+def save_post(id):
+    # Assuming you have a way to fetch the user object by ID
+    
+    user = User.query.get(id)
+    new_post = Post(title=request.form['title'],content=request.form['content'],user=user)
+    db.session.add(new_post)
+    db.session.commit()
+
+    return redirect("<int:id>'")
+
+# @app.route("/posts/<int:post_id>")
+# def show_posts(post_id):
+#     post = Post.query.get_or_404(post_id)
+#     return render_template("show.html", post=post)
+
 
 
