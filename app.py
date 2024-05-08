@@ -14,11 +14,13 @@ app.app_context().push()
 connect_db(app)
 db.create_all()
 
+# the list of users
 @app.route("/")
 def home():
     users = User.query.all()
     return render_template("users.html", users=users)
 
+#list of users post
 @app.route("/", methods=["POST"])
 def user_post():
     first_name = request.form["first_name"]
@@ -30,20 +32,23 @@ def user_post():
     db.session.commit()
 
     return redirect('/')
-
+# the user details page
 @app.route('/<int:id>')
 def user_details(id):
     user = User.query.get_or_404(id)
     return render_template("details.html", user=user)
 
+# form
 @app.route("/users/new")
 def add_user():
     return render_template("form.html")
 
+# edit
 @app.route("/edit")
 def edit_user():
     return render_template("edit.html")
 
+# delete
 @app.route("/users/<int:id>/delete", methods=["POST"])
 def users_destroy(id):
 
@@ -53,27 +58,23 @@ def users_destroy(id):
 
     return redirect("/")
 
+# user posts form
 @app.route("/users/<int:id>/posts/new")
 def add_post_form(id):
     # Assuming you have a way to fetch the user object by ID
     user = User.query.get(id)
     return render_template("add_post.html", user=user)
 
-@app.route("/users/<int:id>/posts/new", methods=["POST"])
-def save_post(id):
-    # Assuming you have a way to fetch the user object by ID
-    
+# user form redirect to details page
+@app.route('/<int:id>', methods=["POST"])
+def post_title(id):
     user = User.query.get(id)
-    new_post = Post(title=request.form['title'],content=request.form['content'],user=user)
+    title = request.form["title"]
+    content = request.form["content"]
+    new_post = Post(title=title, content=content)
+    
     db.session.add(new_post)
     db.session.commit()
-
-    return redirect("<int:id>'")
-
-# @app.route("/posts/<int:post_id>")
-# def show_posts(post_id):
-#     post = Post.query.get_or_404(post_id)
-#     return render_template("show.html", post=post)
-
-
-
+    
+    
+    return render_template("details.html", user=user)
