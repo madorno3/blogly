@@ -66,15 +66,17 @@ def add_post_form(id):
     return render_template("add_post.html", user=user)
 
 # user form redirect to details page
+
 @app.route('/<int:id>', methods=["POST"])
 def post_title(id):
+
     user = User.query.get(id)
     title = request.form["title"]
     content = request.form["content"]
-    new_post = Post(title=title, content=content)
-    
+
+    new_post = Post(title=title, content=content, user_id=id)  # Associate post with user
+
     db.session.add(new_post)
     db.session.commit()
-    
-    
-    return render_template("details.html", user=user)
+
+    return render_template("details.html", user=user, new_post=new_post)
